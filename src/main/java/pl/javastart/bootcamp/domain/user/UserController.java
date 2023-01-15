@@ -5,17 +5,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 public class UserController {
 
     private UserService userService;
+    private final UserRepository userRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/login")
@@ -24,8 +29,19 @@ public class UserController {
     }
 
     @GetMapping("/reset-hasla")
-    public String passwordReset() {
-        return "passwordReset/passwordReset";
+    public String passwordResetGet(@RequestParam(name = "key", required = false, defaultValue = "") String key,
+                                   RedirectAttributes redirectAttributes) {
+        if (key.isEmpty()) {
+            return "passwordReset/passwordReset";
+        } else {
+            Optional<User> user = userRepository.findByPasswordResetKey(key);
+            if (user.isPresent()) {
+                redirectAttributes.addAttribute("key", key);
+                return "redirect:/reset-hasla-koniec";
+            } else {
+                return "redirect:/reset-hasla?error=true";
+            }
+        }
     }
 
     @PostMapping("/reset-hasla")
