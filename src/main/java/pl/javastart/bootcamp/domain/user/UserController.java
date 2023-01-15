@@ -86,9 +86,16 @@ public class UserController {
     }
 
     @PostMapping("/konto/zmiana-hasla")
-    public String changePassword(@RequestParam String newPassword,
+    public String changePassword(@RequestParam String currentPassword,
+                                 @RequestParam String newPassword,
                                  @RequestParam String newPassword2,
                                  Principal principal, Model model) {
+
+        User user = userService.findByEmailOrThrow(principal.getName());
+        if (!userService.checkCurrentPassword(currentPassword, user)) {
+            model.addAttribute("message", "Stare hasło nie jest prawidłowe");
+            return "account/changePassword";
+        }
 
         if (newPassword.length() < 8) {
             model.addAttribute("message", "Hasło powinno mieć co najmniej 8 znaków.");

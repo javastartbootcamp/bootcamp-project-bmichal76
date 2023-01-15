@@ -180,4 +180,8 @@ public class UserService {
         User user = findByEmailOrThrow(name);
         user.setGithubUsername(githubUsername);
     }
+
+    public boolean checkCurrentPassword(String currentPassword, User user) {
+        return passwordEncoder.matches(currentPassword, user.getPassword());
+    }
 }
