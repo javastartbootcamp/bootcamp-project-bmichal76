@@ -253,7 +253,7 @@ public class MailService {
         String title = "Resetowanie hasła";
         String message = "Skorzystaj z linku poniżej w celu zresetowania hasła.";
         String buttonText = "Resetuj hasło";
-        String buttonUrl = "/reset-hasla?key=" + user.getPasswordResetKey();
+        String buttonUrl = "/reset-hasla-koniec?key=" + user.getPasswordResetKey();
         String content = prepareContentFromBaseLayout(title, message, buttonText, buttonUrl);
         asyncMailSender.sendEmail(user.getEmail(), title, content);
     }
