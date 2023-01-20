@@ -14,12 +14,23 @@
         <tr>
             <th>Imię i nazwisko</th>
             <th>Email</th>
+            <th>Rola administratora</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user: ${users}" class="clickable-row" th:data-href="'/admin/uzytkownicy/' + ${user.id}">
-            <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
-            <td th:text="${user.email}"></td>
+        <tr th:each="u: ${users}" class="clickable-row" th:data-href="'/admin/uzytkownicy/' + ${u.user.id}">
+            <td th:text="${u.user.firstName} + ' ' + ${u.user.lastName}"></td>
+            <td th:text="${u.user.email}"></td>
+            <td>
+                <p>
+                    <a th:if="${u.role == 'ROLE_ADMIN'}" class="btn btn-primary"
+                       th:href="'/admin/uzytkownicy/odbierz/' + ${u.user.id}">Odbierz
+                    </a>
+                    <a th:unless="${u.role == 'ROLE_ADMIN'}" class="btn btn-primary"
+                       th:href="'/admin/uzytkownicy/nadaj/' + ${u.user.id}">Nadaj
+                    </a>
+                </p>
+            </td>
         </tr>
 
         </tbody>

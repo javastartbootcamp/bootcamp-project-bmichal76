@@ -11,6 +11,7 @@ import pl.javastart.bootcamp.config.notfound.ResourceNotFoundException;
 import pl.javastart.bootcamp.domain.signup.SignupService;
 import pl.javastart.bootcamp.domain.user.role.Role;
 import pl.javastart.bootcamp.domain.user.role.UserRole;
+import pl.javastart.bootcamp.domain.user.role.UserRoleRepository;
 import pl.javastart.bootcamp.mail.MailService;
 
 import javax.transaction.Transactional;
@@ -22,13 +23,17 @@ import static pl.javastart.bootcamp.domain.user.ActivationResult.*;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private MailService mailService;
-    private SignupService signupService;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, SignupService signupService) {
+    private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
+    private final SignupService signupService;
+
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                       PasswordEncoder passwordEncoder, MailService mailService, SignupService signupService) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.signupService = signupService;
@@ -187,5 +192,20 @@ public class UserService {
 
     private boolean checkCurrentPassword(String currentPassword, User user) {
         return passwordEncoder.matches(currentPassword, user.getPassword());
+    }
+
+    public List<UserWithAdminRole> getAllUsersWithAdminIndicator() {
+        return userRepository.getAllUsersWithRole(Role.ROLE_ADMIN);
+    }
+
+    public void dismissAdmin(Long id) {
+        userRoleRepository.dismissRole(id, Role.ROLE_ADMIN);
+    }
+
+    public void addAdmin(User user) {
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(Role.ROLE_ADMIN);
+        userRoleRepository.save(userRole);
     }
 }
