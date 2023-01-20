@@ -86,7 +86,8 @@ public class UserController {
     }
 
     @PostMapping("/konto/zmiana-hasla")
-    public String changePassword(@RequestParam String newPassword,
+    public String changePassword(@RequestParam String currentPassword,
+                                 @RequestParam String newPassword,
                                  @RequestParam String newPassword2,
                                  Principal principal, Model model) {
 
@@ -97,7 +98,7 @@ public class UserController {
 
         if (newPassword.equals(newPassword2)) {
             try {
-                userService.changePassword(principal.getName(), newPassword);
+                userService.changePassword(principal.getName(), newPassword, currentPassword);
             } catch (InvalidPasswordException e) {
                 model.addAttribute("message", "Podałeś niepoprawne aktualne hasło");
                 return "account/changePassword";

@@ -56,7 +56,6 @@ public class AsyncMailSender {
 
             javaMailSender.send(mimeMessage);
 
-
             try {
                 saveEmailToSendDir(mimeMessage);
             } catch (Exception e) {

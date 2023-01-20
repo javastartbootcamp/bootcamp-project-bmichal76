@@ -101,10 +101,14 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void changePassword(String email, String newPassword) {
+    public void changePassword(String email, String newPassword, String currentPassword) {
         User user = userRepository.findByEmail(email).orElseThrow(ResourceNotFoundException::new);
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        if (checkCurrentPassword(currentPassword, user)) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        } else {
+            throw new InvalidPasswordException();
+        }
     }
 
     public User findByEmailOrThrow(String email) {
@@ -179,5 +183,9 @@ public class UserService {
     public void updateGithubUsername(String name, String githubUsername) {
         User user = findByEmailOrThrow(name);
         user.setGithubUsername(githubUsername);
+    }
+
+    private boolean checkCurrentPassword(String currentPassword, User user) {
+        return passwordEncoder.matches(currentPassword, user.getPassword());
     }
 }

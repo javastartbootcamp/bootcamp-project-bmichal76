@@ -15,3 +15,4 @@ id;email;activated;password;first_name;last_name;address;postal_code;city;auth_k
 14;javastart13@byom.de;true;{noop}asdf;Zosia;Kalus;Szkolna 12/1;10-000;Warszawa;;
 15;javastart14@byom.de;true;{noop}asdf;Zosia;Kalus;Szkolna 12/1;10-000;Warszawa;;
 16;javastart15@byom.de;true;{noop}asTermin na oddanie zadaniadf;Zosia;Kalus;Szkolna 12/1;10-000;Warszawa;;
+17;bmichal76@gmail.com;true;{noop}tajnehaslo;Michał;Bryłka;Szkolna 12/11;00-001;Warszawa;;
